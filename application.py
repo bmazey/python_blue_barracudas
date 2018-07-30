@@ -12,7 +12,7 @@ api = Api(application)
 @api.route("/hello")                   # Create a URL route to this resource
 class HelloWorld(Resource):            # Create a RESTful resource
     def get(self):                     # Create GET endpoint
-        return {'what\'s': 'good'}
+        return {'hello': 'bitches'}
 
 
 def main():
