@@ -15,6 +15,19 @@ class HelloWorld(Resource):            # Create a RESTful resource
         return {'hello': 'bitches'}
 
 
+@api.route("/items")
+class Items(Resource):
+    def get(self):
+        things = [
+            {'Price': 35,
+                'Size': 2,
+                'Color': 'black',
+                'Avail' : True,
+                'ID': 20384
+        }
+        ]
+        return things
+
 def main():
     application.debug = True
     application.run()
