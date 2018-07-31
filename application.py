@@ -70,6 +70,12 @@ class Items(Resource):
         items.append(shirt3)
         return items
 
+    @api.expect(item)
+    @api.marshal_with(item_id)
+    def post(self):
+        new_item = create_item(request.json)
+        return Item.query.filter(Item.id == new_item.id).one()
+
 
 @api.route("/items/<string:color>")
 class Color(Resource):
@@ -78,11 +84,11 @@ class Color(Resource):
         return [shirt for shirt in clothes if shirt['Color'] == color]
 
 
-@api.route("/items/price/ <Boolean: avl>")
+@api.route("/items/price/ <boolean: avl>")
 class Avail(Resource):
     def get(self, avl):
         clothes = Items.get()
-        return [shirt for shirt in clothes if shirt['avl'] == True]
+        return [shirt for shirt in clothes if shirt['avl'] is True]
 
 
 @api.route("/items/price/ <int: prc>")
@@ -99,13 +105,10 @@ class ItemSizeRoute(Resource):
         return [shirt for shirt in clothes if shirt['sz'] == sz]
 
 
-# id is a url-encoded variable
 @api.route("/rumor/<string:id>")
 class ItemIdRoute(Resource):
     @api.marshal_with(item_id)
-    # id becomes a method param in this GET
     def get(self, id):
-        # use sqlalchemy to get a rumor by ID
         return Item.query.filter(Item.id == id)
 
 
