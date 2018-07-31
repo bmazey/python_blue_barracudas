@@ -74,7 +74,7 @@ class Items(Resource):
     @api.marshal_with(item_id)
     def post(self):
         new_item = create_item(request.json)
-        return Item.query.filter(Item.id == new_item.id).one()
+        return Item.query.filter(Item.id == new_item.id)
 
 
 @api.route("/items/<string:color>")
