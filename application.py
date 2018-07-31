@@ -38,10 +38,10 @@ class Item(db.Model):
     id = db.Column(db.Text(80), primary_key=True)
     name = db.Column(db.String(80), unique=False, nullable=False)
     description = db.Column(db.String(120), unique=True, nullable=False)
-    price = db.Column(db.String(20), unique=False, nullable=False)
-    size = db.Column(db.String(20), unique=False, nullable=False)
-    color = db.Column(db.String(20), unique=False, nullable=False)
-    avail = db.Column(db.String(20), unique=False, nullable=False)
+    price = db.Column(db.String(80), unique=False, nullable=False)
+    size = db.Column(db.String(80), unique=False, nullable=False)
+    color = db.Column(db.String(80), unique=False, nullable=False)
+    avail = db.Column(db.String(80), unique=False, nullable=False)
 
     def __repr__(self):
         return '<Rumor %r>' % self.content
