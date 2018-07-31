@@ -99,7 +99,28 @@ class ItemSizeRoute(Resource):
         return [shirt for shirt in clothes if shirt['sz'] == sz]
 
 
+# id is a url-encoded variable
+@api.route("/rumor/<string:id>")
+class ItemIdRoute(Resource):
+    @api.marshal_with(item_id)
+    # id becomes a method param in this GET
+    def get(self, id):
+        # use sqlalchemy to get a rumor by ID
+        return Item.query.filter(Item.id == id)
+
+
+def configure_db():
+    db.create_all()
+    db.session.commit()
+
+
+# for testing only!
+def get_app():
+    return application
+
+
 def main():
+    configure_db()
     application.debug = True
     application.run()
 
