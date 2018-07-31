@@ -23,15 +23,38 @@ item = api.model('item', {
     'Avail': fields.String(required=True, description='item availability'),
 })
 
-rumor_id = api.model('rumor_id', {
+item_id = api.model('rumor_id', {
     'id': fields.String(readOnly=True, description='unique identifier of an item'),
     'name': fields.String(required=True, description='item name'),
     'description': fields.String(required=True, description='item description'),
     'Price': fields.String(required=True, description='item price'),
-    'Size': fields.String(required=True, description='item price'),
-    'Color': fields.String(required=True, description='item price'),
-    'Avail': fields.String(required=True, description='item price'),
+    'Size': fields.String(required=True, description='item size'),
+    'Color': fields.String(required=True, description='item color'),
+    'Avail': fields.String(required=True, description='item availability'),
 })
+
+
+class Item(db.Model):
+    id = db.Column(db.Text(80), primary_key=True)
+    name = db.Column(db.String(80), unique=False, nullable=False)
+    description = db.Column(db.String(120), unique=True, nullable=False)
+    price = db.Column(db.String(20), unique=False, nullable=False)
+    size = db.Column(db.String(20), unique=False, nullable=False)
+    color = db.Column(db.String(20), unique=False, nullable=False)
+    avail = db.Column(db.String(20), unique=False, nullable=False)
+
+    def __repr__(self):
+        return '<Rumor %r>' % self.content
+
+
+def create_item(data):
+    id = str(uuid.uuid4())
+    name = data.get('name')
+    description = data.get('description')
+    item = Item(id=id, name=name, description=description)
+    db.session.add(item)
+    db.session.commit()
+    return item
 
 
 @api.route("/items")
@@ -55,7 +78,49 @@ class Color(Resource):
         return [shirt for shirt in clothes if shirt['Color'] == color]
 
 
+@api.route("/items/price/ <Boolean: avl>")
+class Avail(Resource):
+    def get(self, avl):
+        clothes = Items.get()
+        return [shirt for shirt in clothes if shirt['avl'] == True]
+
+
+@api.route("/items/price/ <int: prc>")
+class ItemPriceRoute(Resource):
+    def get(self, prc):
+        clothes = Items.get()
+        return [shirt for shirt in clothes if shirt['prc'] == prc]
+
+
+@api.route("/items/size/<String: sz>")
+class ItemSizeRoute(Resource):
+    def get(self, sz):
+        clothes = Items.get()
+        return [shirt for shirt in clothes if shirt['sz'] == sz]
+
+
+# id is a url-encoded variable
+@api.route("/rumor/<string:id>")
+class ItemIdRoute(Resource):
+    @api.marshal_with(item_id)
+    # id becomes a method param in this GET
+    def get(self, id):
+        # use sqlalchemy to get a rumor by ID
+        return Item.query.filter(Item.id == id)
+
+
+def configure_db():
+    db.create_all()
+    db.session.commit()
+
+
+# for testing only!
+def get_app():
+    return application
+
+
 def main():
+    configure_db()
     application.debug = True
     application.run()
 
