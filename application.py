@@ -98,7 +98,7 @@ class ItemPriceRoute(Resource):
         return [shirt for shirt in clothes if shirt['prc'] == prc]
 
 
-@api.route("/items/size/<String: sz>")
+@api.route("/items/size/<string: sz>")
 class ItemSizeRoute(Resource):
     def get(self, sz):
         clothes = Items.get()
