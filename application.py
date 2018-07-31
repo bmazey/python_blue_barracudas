@@ -84,14 +84,14 @@ class Color(Resource):
         return [shirt for shirt in clothes if shirt['Color'] == color]
 
 
-@api.route("/items/price/ <boolean: avl>")
+@api.route("/items/price/ <string: avl>")
 class Avail(Resource):
     def get(self, avl):
         clothes = Items.get()
         return [shirt for shirt in clothes if shirt['avl'] is True]
 
 
-@api.route("/items/price/ <int: prc>")
+@api.route("/items/price/ <string: prc>")
 class ItemPriceRoute(Resource):
     def get(self, prc):
         clothes = Items.get()
