@@ -59,46 +59,44 @@ def create_item(data):
 
 @api.route("/items")
 class Items(Resource):
-    things = [
-        {'Price': 35,
-         'Size': 2,
-         'Color': 'black',
-         'Avail': True,
-         'ID': 20384
-         }
-    ]
+    @staticmethod
+    def get():
+        items = []
+        shirt1 = {'Price': 35, 'Size': 2, 'Color': 'black', 'Avail': True, 'ID': 20384}
+        items.append(shirt1)
+        shirt2 = {'Price': 40, 'Size': 4, 'Color': 'red', 'Avail': True, 'ID': 20465}
+        items.append(shirt2)
+        shirt3 = {'Price': 27, 'Size': 6, 'Color': 'blue', 'Avail': True, 'ID': 20567}
+        items.append(shirt3)
+        return items
+
+
+@api.route("/items/<string:color>")
+class Color(Resource):
+    def get(self, color):
+        clothes = Items.get()
+        return [shirt for shirt in clothes if shirt['Color'] == color]
 
 
 @api.route("/items/price/ <Boolean: avl>")
-class ItemAvlRoute(Resource):
-    @api.marshal_with(item_id)
-
-    ]
-
-    @api.route("/items/price/ <int: prc>")
+class Avail(Resource):
+    def get(self, avl):
+        clothes = Items.get()
+        return [shirt for shirt in clothes if shirt['avl'] == True]
 
 
+@api.route("/items/price/ <int: prc>")
 class ItemPriceRoute(Resource):
-    things = [
-        {
-        }
-    ]
-
-
-@api.route("/items/colors/<String: clr>")
-class ItemColorRoute(Resource):
-    things = [
-        {
-        }
-    ]
+    def get(self, prc):
+        clothes = Items.get()
+        return [shirt for shirt in clothes if shirt['prc'] == prc]
 
 
 @api.route("/items/size/<String: sz>")
 class ItemSizeRoute(Resource):
-    things = [
-        {
-        }
-    ]
+    def get(self, sz):
+        clothes = Items.get()
+        return [shirt for shirt in clothes if shirt['sz'] == sz]
 
 
 def main():
