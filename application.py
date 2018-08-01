@@ -63,8 +63,15 @@ def create_item(data):
 
 @api.route("/items")
 class Items(Resource):
-    def get(self):
+    @staticmethod
+    def get():
         items = []
+        shirt1 = {'Price': 35, 'Size': 2, 'Color': 'black', 'Avail': True, 'ID': 20384}
+        items.append(shirt1)
+        shirt2 = {'Price': 40, 'Size': 4, 'Color': 'red', 'Avail': True, 'ID': 20465}
+        items.append(shirt2)
+        shirt3 = {'Price': 27, 'Size': 6, 'Color': 'blue', 'Avail': True, 'ID': 20567}
+        items.append(shirt3)
         return items
 
     @api.expect(item)
