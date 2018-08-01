@@ -7,55 +7,55 @@ class AppDBTests(TestCase):
         self.application = get_app()
         self.client = self.application.test_client()
 
-    # def tearDown(self):
-    #     """
-    #     Ensures that the database is emptied for next unit test
-    #     """
-    #     self.app = Flask(__name__)
-    #     db.init_app(self.app)
-    #     with self.app.app_context():
-    #         db.drop_all()
-
+    # tests get all items
     def test_simple_get(self):
         response = self.client.get('/items')
         print(response.get_json())
         self.assertTrue(200, response.status_code)
 
+    # tests getting item with corresponding id
     def test_id_get(self):
         response = self.client.get("/items/id/<int:id>")
         print(response.get_json())
         self.assertTrue(200, response.status_code)
 
+    # tests getting item with corresponding name
     def test_name_get(self):
         response = self.client.get("/items/name/<string:name>")
         print(response.get_json())
         self.assertTrue(200, response.status_code)
 
+    # tests getting item with corresponding price
     def test_price_get(self):
         response = self.client.get("/items/price/<int:price>")
         print(response.get_json())
         self.assertTrue(200, response.status_code)
 
+    # tests getting item with corresponding size
     def test_size_get(self):
         response = self.client.get("/items/size/<int:size>")
         print(response.get_json())
         self.assertTrue(200, response.status_code)
 
+    # tests getting item with corresponding color
     def test_color_get(self):
         response = self.client.get("/items/color/<string:color>")
         print(response.get_json())
         self.assertTrue(200, response.status_code)
 
+    # tests getting item with corresponding availability
     def test_availability_get(self):
         response = self.client.get("/items/availability/<string:availability>")
         print(response.get_json())
         self.assertTrue(200, response.status_code)
 
+    # tests if item is deleted
     def test_delete(self):
         response = self.client.get("/items/delete/<int:id>")
         print(response.get_json())
         self.assertTrue(200, response.status_code)
 
+    # tests if description is updated
     def test_patch(self):
         response = self.client.get("/items/delete/<int:id>/<string:new_description>")
         print(response.get_json())

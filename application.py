@@ -21,6 +21,7 @@ ns = api.namespace('api', description='Store where you can add your own items an
 '''
 json marshaller (object <-> json)
 '''
+# input item
 item = api.model('item', {
     'name': fields.String(required=True, description='item name'),
     'description': fields.String(required=True, description='item description'),
@@ -30,6 +31,7 @@ item = api.model('item', {
     'availability': fields.String(required=True, description='item availability'),
 })
 
+# item with ID
 item_id = api.model('item_id', {
     'id': fields.Integer(readOnly=True, description='unique identifier of an item'),
     'name': fields.String(required=True, description='item name'),
@@ -101,6 +103,7 @@ class Items(Resource):
         return Item.query.filter(Item.id == new_item.id).one()
 
 
+# deletes an item
 @ns.route("/items/delete/<int:id>")
 class Delete(Resource):
     @api.marshal_with(item_id)
@@ -112,10 +115,10 @@ class Delete(Resource):
         return del_item
 
 
+# updates description of an item
 @ns.route("/items/delete/<int:id>/<string:new_description>")
 class Patch(Resource):
     @api.marshal_with(item_id)
-    # deletes items by id
     def patch(self, id, new_description):
         this_item = Item.query.filter(Item.id == id).one()
         this_item.description = new_description
@@ -124,6 +127,7 @@ class Patch(Resource):
         return this_item
 
 
+# returns the item that the id corresponds to
 @ns.route("/items/id/<int:id>")
 class ItemIdRoute(Resource):
     @api.marshal_with(item_id)
@@ -139,6 +143,7 @@ class ItemColorRoute(Resource):
         return Item.query.filter(Item.color == color).all()
 
 
+# returns item with corresponding name
 @ns.route("/items/name/<string:name>")
 class ItemNameRoute(Resource):
     @api.marshal_with(item_id)
@@ -146,6 +151,7 @@ class ItemNameRoute(Resource):
         return Item.query.filter(Item.name == name).all()
 
 
+# returns item with corresponding availability
 @ns.route("/items/availability/<string:availability>")
 class ItemAvailabilityRoute(Resource):
     @api.marshal_with(item_id)
@@ -153,6 +159,7 @@ class ItemAvailabilityRoute(Resource):
         return Item.query.filter(Item.availability == availability).all()
 
 
+# returns item with corresponding prices
 @ns.route("/items/price/<int:price>")
 class ItemPriceRoute(Resource):
     @api.marshal_with(item_id)
@@ -160,18 +167,36 @@ class ItemPriceRoute(Resource):
         return Item.query.filter(Item.price == price).all()
 
 
+# returns items that cost less than max
+@ns.route("/items/price/max/<int:max>")
+class ItemMaxPriceRoute(Resource):
+    @api.marshal_with(item_id)
+    def get(self, max):
+        return Item.query.filter(Item.price <= max).all()
+
+
+# returns items that cost more than min
+@ns.route("/items/price/min/<int:min>")
+class ItemMinPriceRoute(Resource):
+    @api.marshal_with(item_id)
+    def get(self, min):
+        return Item.query.filter(Item.price >= min).all()
+
+
+# returns item within the price range
+@ns.route("/items/price/range/<int:max>/<int:min>")
+class ItemMinPriceRoute(Resource):
+    @api.marshal_with(item_id)
+    def get(self, max, min):
+        return Item.query.filter(min <= Item.price, max >= Item.price).all()
+
+
+# returns item with corresponding size
 @ns.route("/items/size/<int:size>")
 class ItemSizeRoute(Resource):
     @api.marshal_with(item_id)
     def get(self, size):
         return Item.query.filter(Item.size == size).all()
-
-
-@ns.route("/items/description/<string:description>")
-class ItemSizeRoute(Resource):
-    @api.marshal_with(item_id)
-    def post(self, id, description):
-        return new_descript
 
 
 def configure_db():
