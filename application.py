@@ -1,4 +1,3 @@
-import uuid
 from flask import Flask, request, jsonify
 from flask_restplus import Resource, Api
 from flask_restplus import fields
