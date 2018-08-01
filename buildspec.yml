@@ -12,3 +12,4 @@ artifacts:
   files:
     - application.py
     - requirements.txt
+    - db.sqlite
