@@ -1,6 +1,6 @@
 from unittest import TestCase
 from flask import Flask
-from challenges.rumors.src.application import db
+from application import db
 
 '''
 this does not work yet!!
@@ -29,6 +29,7 @@ class appDBTests(TestCase):
             db.drop_all()
 
     def test_post_and_get(self):
-        response = self.app.test_client().post('/items', data=dict(name='alyssa', content='cheated on her spanish homework'))
+        response = self.app.test_client().post('/items', data=dict(name='shirt', description='fur', price=35, size=2,
+                                                                   color='black', availability=True))
         print(response.json())
         self.assertTrue(200, response.status_code)

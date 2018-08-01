@@ -14,75 +14,89 @@ api = Api(application)
 application.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 db = SQLAlchemy(application)
 
-ns = api.namespace('blog/store', description='Store where you can add your own items and search through them')
+ns = api.namespace('api', description='Store where you can add your own items and search through them')
 
 items_list = []
 
 item = api.model('item', {
     'name': fields.String(required=True, description='item name'),
     'description': fields.String(required=True, description='item description'),
-    'price': fields.String(required=True, description='item price'),
-    'size': fields.String(required=True, description='item size'),
+    'price': fields.Float(required=True, description='item price'),
+    'size': fields.Integer(required=True, description='item size'),
     'color': fields.String(required=True, description='item color'),
-    'availability': fields.String(required=True, description='item availability'),
+    'availability': fields.Boolean(required=True, description='item availability'),
 })
 
 item_id = api.model('item_id', {
-    'id': fields.String(readOnly=True, description='unique identifier of an item'),
+    'id': fields.Integer(readOnly=True, description='unique identifier of an item'),
     'name': fields.String(required=True, description='item name'),
     'description': fields.String(required=True, description='item description'),
-    'price': fields.String(required=True, description='item price'),
-    'size': fields.String(required=True, description='item size'),
+    'price': fields.Float(required=True, description='item price'),
+    'size': fields.Integer(required=True, description='item size'),
     'color': fields.String(required=True, description='item color'),
-    'availability': fields.String(required=True, description='item availability'),
+    'availability': fields.Boolean(required=True, description='item availability'),
 })
 
 
 class Item(db.Model):
-    id = db.Column(db.Text(80), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=False, nullable=False)
     description = db.Column(db.String(120), unique=False, nullable=False)
-    price = db.Column(db.String(80), unique=False, nullable=False)
-    size = db.Column(db.String(80), unique=False, nullable=False)
+    price = db.Column(db.Float(80), unique=False, nullable=False)
+    size = db.Column(db.Integer, unique=False, nullable=False)
     color = db.Column(db.String(80), unique=False, nullable=False)
-    availability = db.Column(db.String(200), unique=False, nullable=False)
+    availability = db.Column(db.Boolean, unique=False, nullable=False)
 
     def __repr__(self):
         return '<Rumor %r>' % self.content
 
 
+identifier = 0
+
+
+def id_creator():
+    global identifier
+    identifier += 1
+    return identifier
+
+
 def create_item(data):
-    id = str(uuid.uuid4())
+    identifier = id_creator()
     name = data.get('name')
     description = data.get('description')
     price = data.get('price')
     size = data.get('size')
     color = data.get('color')
     availability = data.get('availability')
-    itm = Item(id=id, name=name, description=description, price=price, size=size, color=color,
+    itm = Item(id=identifier, name=name, description=description, price=price, size=size, color=color,
                availability=availability)
-    # items.append(itm)
+    # items_list.append(itm)
     db.session.add(itm)
     db.session.commit()
     return itm
 
 
+def get_all_items():
+    return items_list
+
+
 @ns.route("/items")
 class Items(Resource):
-    def get(self):
-        shirt1 = {'Name': 'shirt', 'Description': 'fur', 'Price': 35, 'Size': 2, 'Color': 'black', 'Avail': 'True'}
+    @staticmethod
+    def get():
+        shirt1 = {'Name': 'shirt', 'Description': 'fur', 'Price': 35, 'Size': 2, 'Color': 'black', 'Avail': True}
         items_list.append(shirt1)
-        shirt2 = {'Name': 'pants', 'Description': 'khakis', 'Price': 40, 'Size': 4, 'Color': 'red', 'Avail': 'True'}
+        shirt2 = {'Name': 'pants', 'Description': 'khakis', 'Price': 40, 'Size': 4, 'Color': 'red', 'Avail': True}
         items_list.append(shirt2)
-        shirt3 = {'Name': 'shoes', 'Description': 'vans', 'Price': 27, 'Size': 6, 'Color': 'blue', 'Avail': 'True'}
+        shirt3 = {'Name': 'shoes', 'Description': 'vans', 'Price': 27, 'Size': 6, 'Color': 'blue', 'Avail': True}
         items_list.append(shirt3)
         return items_list
 
-    @ns.expect(item)
-    @ns.marshal_with(item_id)
+    @api.expect(item)
+    @api.marshal_with(item_id)
     def post(self):
         new_item = create_item(request.json)
-        return Items.query.filter(Items.id == new_item.id)
+        return Item.query.filter(Item.id == new_item.id).one()
 
 
 @ns.route("/items/color/<string:color>")
@@ -120,7 +134,7 @@ class ItemSizeRoute(Resource):
         return [shirt for shirt in clothes if shirt['sz'] == sz]
 
 
-@ns.route("/rumor/<string:id>")
+@ns.route("/rumor/<int:id>")
 class ItemIdRoute(Resource):
     @api.marshal_with(item_id)
     def get(self, id):
