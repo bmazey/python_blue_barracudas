@@ -14,9 +14,9 @@ api = Api(application)
 application.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 db = SQLAlchemy(application)
 
-ns = api.namespace('blog/categories', description='Operations related to blog categories')
+ns = api.namespace('blog/store', description='Store where you can add your own items and search through them')
 
-# items = []
+items_list = []
 
 item = api.model('item', {
     'name': fields.String(required=True, description='item name'),
@@ -67,63 +67,60 @@ def create_item(data):
     return itm
 
 
-@api.route("/items")
+@ns.route("/items")
 class Items(Resource):
     def get(self):
         shirt1 = {'Name': 'shirt', 'Description': 'fur', 'Price': 35, 'Size': 2, 'Color': 'black', 'Avail': 'True'}
-        db.session.add(shirt1)
-        # shirt2 = {'Name': 'pants', 'Description': 'khakis', 'Price': 40, 'Size': 4, 'Color': 'red', 'Avail': 'True'}
-        # db.session.add(shirt2)
-        # shirt3 = {'Name': 'shoes', ''Description': 'vans', Price': 27, 'Size': 6, 'Color': 'blue', 'Avail': 'True'}
-        # db.session.add(shirt3)
-        # items.append(shirt3)
-        return db.session.query(Item)
+        items_list.append(shirt1)
+        shirt2 = {'Name': 'pants', 'Description': 'khakis', 'Price': 40, 'Size': 4, 'Color': 'red', 'Avail': 'True'}
+        items_list.append(shirt2)
+        shirt3 = {'Name': 'shoes', 'Description': 'vans', 'Price': 27, 'Size': 6, 'Color': 'blue', 'Avail': 'True'}
+        items_list.append(shirt3)
+        return items_list
 
-    @api.expect(item)
-    @api.marshal_with(item_id)
+    @ns.expect(item)
+    @ns.marshal_with(item_id)
     def post(self):
         new_item = create_item(request.json)
-        return Item.query.filter(Item.id == new_item.id).one()
+        return Items.query.filter(Items.id == new_item.id)
 
 
-@api.route("/items/color/<string:color>")
+@ns.route("/items/color/<string:color>")
 class ItemColorRoute(Resource):
-    # id becomes a method param in this GET
-    def get(self, clr):
-        # use sqlalchemy to get a rumor by ID
-        return Item.query.filter(Item.color == clr)
+    def get(self, color):
+        clothes = Items.get()
+        return [shirt for shirt in clothes if shirt['color'] == color]
 
 
-@api.route("/items/name/<string:name>")
+@ns.route("/items/name/<string:name>")
 class ItemNameRoute(Resource):
-    # id becomes a method param in this GET
     def get(self, name):
-        # use sqlalchemy to get a rumor by ID
-        return Item.query.filter(Item.name == name)
+        clothes = Items.get()
+        return [shirt for shirt in clothes if shirt['name'] == name]
 
 
-@api.route("/items/availability/<string:availability>")
-class Avail(Resource):
+@ns.route("/items/availability/<string:availability>")
+class ItemAvailabilityRoute(Resource):
     def get(self, avl):
         clothes = Items.get()
         return [shirt for shirt in clothes if shirt['avl'] == avl]
 
 
-@api.route("/items/price/<string:price>")
+@ns.route("/items/price/<int:price>")
 class ItemPriceRoute(Resource):
     def get(self, prc):
         clothes = Items.get()
-        return [shirt for shirt in clothes if str(shirt['prc']) == prc]
+        return [shirt for shirt in clothes if shirt['prc'] == prc]
 
 
-@api.route("/items/size/<string:size>")
+@ns.route("/items/size/<int:size>")
 class ItemSizeRoute(Resource):
     def get(self, sz):
         clothes = Items.get()
-        return [shirt for shirt in clothes if str(shirt['sz']) == sz]
+        return [shirt for shirt in clothes if shirt['sz'] == sz]
 
 
-@api.route("/rumor/<string:id>")
+@ns.route("/rumor/<string:id>")
 class ItemIdRoute(Resource):
     @api.marshal_with(item_id)
     def get(self, id):
