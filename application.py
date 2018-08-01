@@ -9,15 +9,18 @@ from flask_sqlalchemy import SQLAlchemy
 # working with sqlalchemy & swagger:
 # http://michal.karzynski.pl/blog/2016/06/19/building-beautiful-restful-apis-using-flask-swagger-ui-flask-restplus/
 
+# simple flask app definitions
 application = Flask(__name__)
 api = Api(application)
 application.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 db = SQLAlchemy(application)
 
+# renames namespace
 ns = api.namespace('api', description='Store where you can add your own items and search through them')
 
-items_list = []
-
+'''
+json marshaller (object <-> json)
+'''
 item = api.model('item', {
     'name': fields.String(required=True, description='item name'),
     'description': fields.String(required=True, description='item description'),
@@ -51,15 +54,18 @@ class Item(db.Model):
         return '<Rumor %r>' % self.content
 
 
+# id variable
 identifier = 0
 
 
+# increments ID by one
 def id_creator():
     global identifier
     identifier += 1
     return identifier
 
 
+# creates an item by taking info from client
 def create_item(data):
     identifier = id_creator()
     name = data.get('name')
@@ -75,19 +81,27 @@ def create_item(data):
     return itm
 
 
+'''
+API controllers
+'''
+
+
 @ns.route("/items")
 class Items(Resource):
     @api.marshal_with(item_id)
+    # gets all items
     def get(self):
         return Item.query.all()
 
     @api.expect(item)
     @api.marshal_with(item_id)
+    # creates item
     def post(self):
         new_item = create_item(request.json)
         return Item.query.filter(Item.id == new_item.id).one()
 
 
+# returns all items with that color
 @ns.route("/items/color/<string:color>")
 class ItemColorRoute(Resource):
     @api.marshal_with(item_id)
