@@ -55,10 +55,10 @@ def create_item(data):
     size = data.get('size')
     color = data.get('color')
     availability = data.get('availability')
-    item = Item(id=id, name=name, description=description, price=price, size=size, color=color, availability=availability)
-    db.session.add(item)
+    itm = Item(id=id, name=name, description=description, price=price, size=size, color=color, availability=availability)
+    db.session.add(itm)
     db.session.commit()
-    return item
+    return itm
 
 
 @api.route("/items")
@@ -66,11 +66,11 @@ class Items(Resource):
     @staticmethod
     def get():
         items = []
-        shirt1 = {'Price': 35, 'Size': 2, 'Color': 'black', 'Avail': True, 'ID': 20384}
+        shirt1 = {'Price': 35, 'Size': 2, 'Color': 'black', 'Avail': 'True'}
         items.append(shirt1)
-        shirt2 = {'Price': 40, 'Size': 4, 'Color': 'red', 'Avail': True, 'ID': 20465}
+        shirt2 = {'Price': 40, 'Size': 4, 'Color': 'red', 'Avail': 'True'}
         items.append(shirt2)
-        shirt3 = {'Price': 27, 'Size': 6, 'Color': 'blue', 'Avail': True, 'ID': 20567}
+        shirt3 = {'Price': 27, 'Size': 6, 'Color': 'blue', 'Avail': 'True'}
         items.append(shirt3)
         return items
 
@@ -101,14 +101,14 @@ class Avail(Resource):
 class ItemPriceRoute(Resource):
     def get(self, prc):
         clothes = Items.get()
-        return [shirt for shirt in clothes if shirt['prc'] == prc]
+        return [shirt for shirt in clothes if str(shirt['prc']) == prc]
 
 
 @api.route("/items/size/<string:sz>")
 class ItemSizeRoute(Resource):
     def get(self, sz):
         clothes = Items.get()
-        return [shirt for shirt in clothes if shirt['sz'] == sz]
+        return [shirt for shirt in clothes if str(shirt['sz']) == sz]
 
 
 @api.route("/rumor/<string:id>")
