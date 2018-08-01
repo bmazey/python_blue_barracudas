@@ -101,6 +101,36 @@ class Items(Resource):
         return Item.query.filter(Item.id == new_item.id).one()
 
 
+@ns.route("/items/delete/<int:id>")
+class Delete(Resource):
+    @api.marshal_with(item_id)
+    # deletes items by id
+    def delete(self, id):
+        del_item = Item.query.filter(Item.id == id).one()
+        db.session.delete(del_item)
+        db.session.commit()
+        return del_item
+
+
+@ns.route("/items/delete/<int:id>/<string:new_description>")
+class Patch(Resource):
+    @api.marshal_with(item_id)
+    # deletes items by id
+    def patch(self, id, new_description):
+        this_item = Item.query.filter(Item.id == id).one()
+        this_item.description = new_description
+        db.session.add(this_item)
+        db.session.commit()
+        return this_item
+
+
+@ns.route("/items/id/<int:id>")
+class ItemIdRoute(Resource):
+    @api.marshal_with(item_id)
+    def get(self, id):
+        return Item.query.filter(Item.id == id).one()
+
+
 # returns all items with that color
 @ns.route("/items/color/<string:color>")
 class ItemColorRoute(Resource):
@@ -137,11 +167,11 @@ class ItemSizeRoute(Resource):
         return Item.query.filter(Item.size == size).all()
 
 
-@ns.route("/items/id/<int:id>")
-class ItemIdRoute(Resource):
+@ns.route("/items/description/<string:description>")
+class ItemSizeRoute(Resource):
     @api.marshal_with(item_id)
-    def get(self, id):
-        return Item.query.filter(Item.id == id).one()
+    def post(self, id, description):
+        return new_descript
 
 
 def configure_db():
