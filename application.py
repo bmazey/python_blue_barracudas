@@ -16,7 +16,7 @@ application.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 db = SQLAlchemy(application)
 
 # renames namespace
-ns = api.namespace('api', description='Store where you can add your own items and search through them')
+ns = api.namespace('api/store', description='Store where you can add your own items and search through them')
 
 '''
 json marshaller (object <-> json)
