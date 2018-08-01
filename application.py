@@ -24,7 +24,7 @@ item = api.model('item', {
     'price': fields.Float(required=True, description='item price'),
     'size': fields.Integer(required=True, description='item size'),
     'color': fields.String(required=True, description='item color'),
-    'availability': fields.Boolean(required=True, description='item availability'),
+    'availability': fields.String(required=True, description='item availability'),
 })
 
 item_id = api.model('item_id', {
@@ -34,7 +34,7 @@ item_id = api.model('item_id', {
     'price': fields.Float(required=True, description='item price'),
     'size': fields.Integer(required=True, description='item size'),
     'color': fields.String(required=True, description='item color'),
-    'availability': fields.Boolean(required=True, description='item availability'),
+    'availability': fields.String(required=True, description='item availability'),
 })
 
 
@@ -45,7 +45,7 @@ class Item(db.Model):
     price = db.Column(db.Float(80), unique=False, nullable=False)
     size = db.Column(db.Integer, unique=False, nullable=False)
     color = db.Column(db.String(80), unique=False, nullable=False)
-    availability = db.Column(db.Boolean, unique=False, nullable=False)
+    availability = db.Column(db.String(50), unique=False, nullable=False)
 
     def __repr__(self):
         return '<Rumor %r>' % self.content
@@ -85,7 +85,6 @@ class Items(Resource):
     @api.marshal_with(item_id)
     def post(self):
         new_item = create_item(request.json)
-        items_list.append(new_item)
         return Item.query.filter(Item.id == new_item.id).one()
 
 
@@ -93,42 +92,42 @@ class Items(Resource):
 class ItemColorRoute(Resource):
     @api.marshal_with(item_id)
     def get(self, color):
-        return Item.query.filter(Item.color == color)
+        return Item.query.filter(Item.color == color).all()
 
 
 @ns.route("/items/name/<string:name>")
 class ItemNameRoute(Resource):
     @api.marshal_with(item_id)
     def get(self, name):
-        return Item.query.filter(Item.name == name)
+        return Item.query.filter(Item.name == name).all()
 
 
 @ns.route("/items/availability/<string:availability>")
 class ItemAvailabilityRoute(Resource):
     @api.marshal_with(item_id)
-    def get(self, avl):
-        return Item.query.filter(str(Item.availability) == avl)
+    def get(self, availability):
+        return Item.query.filter(Item.availability == availability).all()
 
 
 @ns.route("/items/price/<int:price>")
 class ItemPriceRoute(Resource):
     @api.marshal_with(item_id)
-    def get(self, prc):
-        return Item.query.filter(str(Item.price) == prc)
+    def get(self, price):
+        return Item.query.filter(Item.price == price).all()
 
 
 @ns.route("/items/size/<int:size>")
 class ItemSizeRoute(Resource):
     @api.marshal_with(item_id)
-    def get(self, sz):
-        return Item.query.filter(str(Item.size) == sz)
+    def get(self, size):
+        return Item.query.filter(Item.size == size).all()
 
 
-@ns.route("/rumor/<int:id>")
+@ns.route("/items/id/<int:id>")
 class ItemIdRoute(Resource):
     @api.marshal_with(item_id)
-    def get(self, ident):
-        return Item.query.filter(str(Item.id) == ident)
+    def get(self, id):
+        return Item.query.filter(Item.id == id).one()
 
 
 def configure_db():

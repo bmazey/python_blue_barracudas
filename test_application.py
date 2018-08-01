@@ -29,7 +29,7 @@ class appDBTests(TestCase):
             db.drop_all()
 
     def test_post_and_get(self):
-        response = self.app.test_client().post('/items', data=dict(name='shirt', description='fur', price=35, size=2,
+        response = self.app.test_client().post('/items', data=dict(name='shirt', description='cotton', price=35, size=2,
                                                                    color='black', availability=True))
         print(response.json())
         self.assertTrue(200, response.status_code)
