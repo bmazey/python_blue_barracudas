@@ -14,6 +14,8 @@ api = Api(application)
 application.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 db = SQLAlchemy(application)
 
+# items = []
+
 item = api.model('item', {
     'name': fields.String(required=True, description='item name'),
     'description': fields.String(required=True, description='item description'),
@@ -41,7 +43,7 @@ class Item(db.Model):
     price = db.Column(db.String(80), unique=False, nullable=False)
     size = db.Column(db.String(80), unique=False, nullable=False)
     color = db.Column(db.String(80), unique=False, nullable=False)
-    avail = db.Column(db.String(80), unique=False, nullable=False)
+    availability = db.Column(db.String(80), unique=False, nullable=False)
 
     def __repr__(self):
         return '<Rumor %r>' % self.content
@@ -55,7 +57,9 @@ def create_item(data):
     size = data.get('size')
     color = data.get('color')
     availability = data.get('availability')
-    itm = Item(id=id, name=name, description=description, price=price, size=size, color=color, availability=availability)
+    itm = Item(id=id, name=name, description=description, price=price, size=size, color=color,
+               availability=availability)
+    # items.append(itm)
     db.session.add(itm)
     db.session.commit()
     return itm
@@ -65,14 +69,14 @@ def create_item(data):
 class Items(Resource):
     @staticmethod
     def get():
-        items = []
         shirt1 = {'Price': 35, 'Size': 2, 'Color': 'black', 'Avail': 'True'}
-        items.append(shirt1)
-        shirt2 = {'Price': 40, 'Size': 4, 'Color': 'red', 'Avail': 'True'}
-        items.append(shirt2)
-        shirt3 = {'Price': 27, 'Size': 6, 'Color': 'blue', 'Avail': 'True'}
-        items.append(shirt3)
-        return items
+        # db.session.add(shirt1)
+        # shirt2 = {'Price': 40, 'Size': 4, 'Color': 'red', 'Avail': 'True'}
+        # db.session.add(shirt2)
+        # shirt3 = {'Price': 27, 'Size': 6, 'Color': 'blue', 'Avail': 'True'}
+        # db.session.add(shirt3)
+        # items.append(shirt3)
+        return shirt1
 
     @api.expect(item)
     @api.marshal_with(item_id)
