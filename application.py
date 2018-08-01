@@ -67,8 +67,7 @@ def create_item(data):
 
 @api.route("/items")
 class Items(Resource):
-    @staticmethod
-    def get():
+    def get(self):
         shirt1 = {'Price': 35, 'Size': 2, 'Color': 'black', 'Avail': 'True'}
         # db.session.add(shirt1)
         # shirt2 = {'Price': 40, 'Size': 4, 'Color': 'red', 'Avail': 'True'}
