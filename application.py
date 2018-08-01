@@ -14,6 +14,8 @@ api = Api(application)
 application.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 db = SQLAlchemy(application)
 
+ns = api.namespace('blog/categories', description='Operations related to blog categories')
+
 # items = []
 
 item = api.model('item', {
@@ -84,7 +86,7 @@ class Items(Resource):
         return Item.query.filter(Item.id == new_item.id).one()
 
 
-@api.route("/items/<string:color>")
+@api.route("/items/color/<string:color>")
 class ItemColorRoute(Resource):
     # id becomes a method param in this GET
     def get(self, clr):
@@ -92,7 +94,7 @@ class ItemColorRoute(Resource):
         return Item.query.filter(Item.color == clr)
 
 
-@api.route("/items/<string:name>")
+@api.route("/items/name/<string:name>")
 class ItemNameRoute(Resource):
     # id becomes a method param in this GET
     def get(self, name):
@@ -100,7 +102,7 @@ class ItemNameRoute(Resource):
         return Item.query.filter(Item.name == name)
 
 
-@api.route("/items/price/<string:availability>")
+@api.route("/items/availability/<string:availability>")
 class Avail(Resource):
     def get(self, avl):
         clothes = Items.get()
