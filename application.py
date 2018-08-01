@@ -115,7 +115,7 @@ class Delete(Resource):
 
 
 # updates description of an item
-@ns.route("/items/delete/<int:id>/<string:new_description>")
+@ns.route("/items/patch/<int:id>/<string:new_description>")
 class Patch(Resource):
     @api.marshal_with(item_id)
     def patch(self, id, new_description):
