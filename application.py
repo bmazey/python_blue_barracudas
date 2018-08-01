@@ -68,11 +68,11 @@ def create_item(data):
 @api.route("/items")
 class Items(Resource):
     def get(self):
-        shirt1 = {'Name': 'shirt', 'Price': 35, 'Size': 2, 'Color': 'black', 'Avail': 'True'}
+        shirt1 = {'Name': 'shirt', 'Description': 'fur', 'Price': 35, 'Size': 2, 'Color': 'black', 'Avail': 'True'}
         # db.session.add(shirt1)
-        # shirt2 = {'Price': 40, 'Size': 4, 'Color': 'red', 'Avail': 'True'}
+        # shirt2 = {'Name': 'pants', 'Description': 'khakis', 'Price': 40, 'Size': 4, 'Color': 'red', 'Avail': 'True'}
         # db.session.add(shirt2)
-        # shirt3 = {'Price': 27, 'Size': 6, 'Color': 'blue', 'Avail': 'True'}
+        # shirt3 = {'Name': 'shoes', ''Description': 'vans', Price': 27, 'Size': 6, 'Color': 'blue', 'Avail': 'True'}
         # db.session.add(shirt3)
         # items.append(shirt3)
         return shirt1
