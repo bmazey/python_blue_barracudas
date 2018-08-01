@@ -84,7 +84,7 @@ class Items(Resource):
         return Item.query.filter(Item.id == new_item.id).one()
 
 
-@api.route("/items/<string:clr>")
+@api.route("/items/<string:color>")
 class ItemColorRoute(Resource):
     # id becomes a method param in this GET
     def get(self, clr):
@@ -100,21 +100,21 @@ class ItemNameRoute(Resource):
         return Item.query.filter(Item.name == name)
 
 
-@api.route("/items/price/<string:avl>")
+@api.route("/items/price/<string:availability>")
 class Avail(Resource):
     def get(self, avl):
         clothes = Items.get()
         return [shirt for shirt in clothes if shirt['avl'] == avl]
 
 
-@api.route("/items/price/<string:prc>")
+@api.route("/items/price/<string:price>")
 class ItemPriceRoute(Resource):
     def get(self, prc):
         clothes = Items.get()
         return [shirt for shirt in clothes if str(shirt['prc']) == prc]
 
 
-@api.route("/items/size/<string:sz>")
+@api.route("/items/size/<string:size>")
 class ItemSizeRoute(Resource):
     def get(self, sz):
         clothes = Items.get()
