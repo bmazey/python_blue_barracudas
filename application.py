@@ -68,7 +68,7 @@ def create_item(data):
 @api.route("/items")
 class Items(Resource):
     def get(self):
-        shirt1 = {'Price': 35, 'Size': 2, 'Color': 'black', 'Avail': 'True'}
+        shirt1 = {'Name': 'shirt', 'Price': 35, 'Size': 2, 'Color': 'black', 'Avail': 'True'}
         # db.session.add(shirt1)
         # shirt2 = {'Price': 40, 'Size': 4, 'Color': 'red', 'Avail': 'True'}
         # db.session.add(shirt2)
@@ -86,11 +86,18 @@ class Items(Resource):
 
 @api.route("/items/<string:clr>")
 class ItemColorRoute(Resource):
-    @api.marshal_with(item_id)
     # id becomes a method param in this GET
     def get(self, clr):
         # use sqlalchemy to get a rumor by ID
         return Item.query.filter(Item.color == clr)
+
+
+@api.route("/items/<string:name>")
+class ItemNameRoute(Resource):
+    # id becomes a method param in this GET
+    def get(self, name):
+        # use sqlalchemy to get a rumor by ID
+        return Item.query.filter(Item.name == name)
 
 
 @api.route("/items/price/<string:avl>")
