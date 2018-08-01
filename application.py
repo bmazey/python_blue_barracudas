@@ -62,11 +62,11 @@ class Items(Resource):
     @staticmethod
     def get():
         items = []
-        shirt1 = {'Price': 35, 'Size': 2, 'Color': 'black', 'Avail': True, 'ID': 20384}
+        shirt1 = {'Price': '35', 'Size': '2', 'Color': 'black', 'Avail': True}
         items.append(shirt1)
-        shirt2 = {'Price': 40, 'Size': 4, 'Color': 'red', 'Avail': True, 'ID': 20465}
+        shirt2 = {'Price': '40', 'Size': '4', 'Color': 'red', 'Avail': True}
         items.append(shirt2)
-        shirt3 = {'Price': 27, 'Size': 6, 'Color': 'blue', 'Avail': True, 'ID': 20567}
+        shirt3 = {'Price': '27', 'Size': '6', 'Color': 'blue', 'Avail': True}
         items.append(shirt3)
         return items
 
@@ -74,11 +74,11 @@ class Items(Resource):
     @api.marshal_with(item_id)
     def post(self):
         new_item = create_item(request.json)
-        return Item.query.filter(Item.id == new_item.id)
+        return Item.query.filter(Item.id == new_item.id).one()
 
 
-@api.route("/rumor/<string:clr>")
-class RumorIdRoute(Resource):
+@api.route("/items/<string:clr>")
+class ItemColorRoute(Resource):
     @api.marshal_with(item_id)
     # id becomes a method param in this GET
     def get(self, clr):
