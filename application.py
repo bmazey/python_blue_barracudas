@@ -17,20 +17,20 @@ db = SQLAlchemy(application)
 item = api.model('item', {
     'name': fields.String(required=True, description='item name'),
     'description': fields.String(required=True, description='item description'),
-    'Price': fields.String(required=True, description='item price'),
-    'Size': fields.String(required=True, description='item size'),
-    'Color': fields.String(required=True, description='item color'),
-    'Avail': fields.String(required=True, description='item availability'),
+    'price': fields.String(required=True, description='item price'),
+    'size': fields.String(required=True, description='item size'),
+    'color': fields.String(required=True, description='item color'),
+    'availability': fields.String(required=True, description='item availability'),
 })
 
-item_id = api.model('rumor_id', {
+item_id = api.model('item_id', {
     'id': fields.String(readOnly=True, description='unique identifier of an item'),
     'name': fields.String(required=True, description='item name'),
     'description': fields.String(required=True, description='item description'),
-    'Price': fields.String(required=True, description='item price'),
-    'Size': fields.String(required=True, description='item size'),
-    'Color': fields.String(required=True, description='item color'),
-    'Avail': fields.String(required=True, description='item availability'),
+    'price': fields.String(required=True, description='item price'),
+    'size': fields.String(required=True, description='item size'),
+    'color': fields.String(required=True, description='item color'),
+    'availability': fields.String(required=True, description='item availability'),
 })
 
 
@@ -51,7 +51,11 @@ def create_item(data):
     id = str(uuid.uuid4())
     name = data.get('name')
     description = data.get('description')
-    item = Item(id=id, name=name, description=description)
+    price = data.get('price')
+    size = data.get('size')
+    color = data.get('color')
+    availability = data.get('availability')
+    item = Item(id=id, name=name, description=description, price=price, size=size, color=color, availability=availability)
     db.session.add(item)
     db.session.commit()
     return item
@@ -59,15 +63,8 @@ def create_item(data):
 
 @api.route("/items")
 class Items(Resource):
-    @staticmethod
-    def get():
+    def get(self):
         items = []
-        shirt1 = {'Price': '35', 'Size': '2', 'Color': 'black', 'Avail': True}
-        items.append(shirt1)
-        shirt2 = {'Price': '40', 'Size': '4', 'Color': 'red', 'Avail': True}
-        items.append(shirt2)
-        shirt3 = {'Price': '27', 'Size': '6', 'Color': 'blue', 'Avail': True}
-        items.append(shirt3)
         return items
 
     @api.expect(item)
