@@ -39,11 +39,11 @@ item_id = api.model('item_id', {
 class Item(db.Model):
     id = db.Column(db.Text(80), primary_key=True)
     name = db.Column(db.String(80), unique=False, nullable=False)
-    description = db.Column(db.String(120), unique=True, nullable=False)
+    description = db.Column(db.String(120), unique=False, nullable=False)
     price = db.Column(db.String(80), unique=False, nullable=False)
     size = db.Column(db.String(80), unique=False, nullable=False)
     color = db.Column(db.String(80), unique=False, nullable=False)
-    availability = db.Column(db.String(80), unique=False, nullable=False)
+    availability = db.Column(db.String(200), unique=False, nullable=False)
 
     def __repr__(self):
         return '<Rumor %r>' % self.content
@@ -69,13 +69,13 @@ def create_item(data):
 class Items(Resource):
     def get(self):
         shirt1 = {'Name': 'shirt', 'Description': 'fur', 'Price': 35, 'Size': 2, 'Color': 'black', 'Avail': 'True'}
-        # db.session.add(shirt1)
+        db.session.add(shirt1)
         # shirt2 = {'Name': 'pants', 'Description': 'khakis', 'Price': 40, 'Size': 4, 'Color': 'red', 'Avail': 'True'}
         # db.session.add(shirt2)
         # shirt3 = {'Name': 'shoes', ''Description': 'vans', Price': 27, 'Size': 6, 'Color': 'blue', 'Avail': 'True'}
         # db.session.add(shirt3)
         # items.append(shirt3)
-        return shirt1
+        return db.session.query(Item)
 
     @api.expect(item)
     @api.marshal_with(item_id)
