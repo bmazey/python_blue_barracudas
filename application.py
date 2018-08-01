@@ -70,75 +70,65 @@ def create_item(data):
     availability = data.get('availability')
     itm = Item(id=identifier, name=name, description=description, price=price, size=size, color=color,
                availability=availability)
-    # items_list.append(itm)
     db.session.add(itm)
     db.session.commit()
     return itm
 
 
-def get_all_items():
-    return items_list
-
-
 @ns.route("/items")
 class Items(Resource):
-    @staticmethod
-    def get():
-        shirt1 = {'Name': 'shirt', 'Description': 'fur', 'Price': 35, 'Size': 2, 'Color': 'black', 'Avail': True}
-        items_list.append(shirt1)
-        shirt2 = {'Name': 'pants', 'Description': 'khakis', 'Price': 40, 'Size': 4, 'Color': 'red', 'Avail': True}
-        items_list.append(shirt2)
-        shirt3 = {'Name': 'shoes', 'Description': 'vans', 'Price': 27, 'Size': 6, 'Color': 'blue', 'Avail': True}
-        items_list.append(shirt3)
-        return items_list
+    @api.marshal_with(item_id)
+    def get(self):
+        return Item.query.all()
 
     @api.expect(item)
     @api.marshal_with(item_id)
     def post(self):
         new_item = create_item(request.json)
+        items_list.append(new_item)
         return Item.query.filter(Item.id == new_item.id).one()
 
 
 @ns.route("/items/color/<string:color>")
 class ItemColorRoute(Resource):
+    @api.marshal_with(item_id)
     def get(self, color):
-        clothes = Items.get()
-        return [shirt for shirt in clothes if shirt['color'] == color]
+        return Item.query.filter(Item.color == color)
 
 
 @ns.route("/items/name/<string:name>")
 class ItemNameRoute(Resource):
+    @api.marshal_with(item_id)
     def get(self, name):
-        clothes = Items.get()
-        return [shirt for shirt in clothes if shirt['name'] == name]
+        return Item.query.filter(Item.name == name)
 
 
 @ns.route("/items/availability/<string:availability>")
 class ItemAvailabilityRoute(Resource):
+    @api.marshal_with(item_id)
     def get(self, avl):
-        clothes = Items.get()
-        return [shirt for shirt in clothes if shirt['avl'] == avl]
+        return Item.query.filter(str(Item.availability) == avl)
 
 
 @ns.route("/items/price/<int:price>")
 class ItemPriceRoute(Resource):
+    @api.marshal_with(item_id)
     def get(self, prc):
-        clothes = Items.get()
-        return [shirt for shirt in clothes if shirt['prc'] == prc]
+        return Item.query.filter(str(Item.price) == prc)
 
 
 @ns.route("/items/size/<int:size>")
 class ItemSizeRoute(Resource):
+    @api.marshal_with(item_id)
     def get(self, sz):
-        clothes = Items.get()
-        return [shirt for shirt in clothes if shirt['sz'] == sz]
+        return Item.query.filter(str(Item.size) == sz)
 
 
 @ns.route("/rumor/<int:id>")
 class ItemIdRoute(Resource):
     @api.marshal_with(item_id)
-    def get(self, id):
-        return Item.query.filter(Item.id == id)
+    def get(self, ident):
+        return Item.query.filter(str(Item.id) == ident)
 
 
 def configure_db():
