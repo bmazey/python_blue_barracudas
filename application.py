@@ -77,18 +77,20 @@ class Items(Resource):
         return Item.query.filter(Item.id == new_item.id)
 
 
-@api.route("/items/<string:color>")
-class Color(Resource):
-    def get(self, color):
-        clothes = Items.get()
-        return [shirt for shirt in clothes if shirt['Color'] == color]
+@api.route("/rumor/<string:clr>")
+class RumorIdRoute(Resource):
+    @api.marshal_with(item_id)
+    # id becomes a method param in this GET
+    def get(self, clr):
+        # use sqlalchemy to get a rumor by ID
+        return Item.query.filter(Item.color == clr)
 
 
 @api.route("/items/price/<string:avl>")
 class Avail(Resource):
     def get(self, avl):
         clothes = Items.get()
-        return [shirt for shirt in clothes if shirt['avl'] is True]
+        return [shirt for shirt in clothes if shirt['avl'] == avl]
 
 
 @api.route("/items/price/<string:prc>")
