@@ -183,7 +183,6 @@ def configure_db():
 def get_app():
     return application
 
-
 def main():
     configure_db()
     application.debug = True
