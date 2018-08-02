@@ -60,3 +60,9 @@ class AppDBTests(TestCase):
         response = self.client.get("/items/delete/<int:id>/<string:new_description>")
         print(response.get_json())
         self.assertTrue(200, response.status_code)
+
+    # tests 418 teapot error
+    def test_teapot(self):
+        response = self.client.get("/teapot")
+        print(response.get_json())
+        self.assertTrue(418, response.status_code)
