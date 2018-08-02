@@ -102,6 +102,14 @@ class Items(Resource):
         return Item.query.filter(Item.id == new_item.id).one()
 
 
+# returns 418 teapot error
+@ns.route('/teapot')
+@api.response(418, 'Category not found.')
+class Teapot(Resource):
+    def get(self):
+        return None, 418
+
+
 # deletes an item
 @ns.route("/items/delete/<int:id>")
 class Delete(Resource):
@@ -116,7 +124,7 @@ class Delete(Resource):
 
 # updates description of an item
 @ns.route("/items/patch/<int:id>/<string:new_description>")
-class Patch(Resource):
+class ItemDescriptionUpdate(Resource):
     @api.marshal_with(item_id)
     def patch(self, id, new_description):
         this_item = Item.query.filter(Item.id == id).one()
