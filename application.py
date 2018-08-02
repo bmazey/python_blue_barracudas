@@ -167,7 +167,7 @@ class ItemAvailabilityRoute(Resource):
 
 
 # returns item with corresponding prices
-@ns.route("/items/price/<int:price>")
+@ns.route("/items/price/<float:price>")
 class ItemPriceRoute(Resource):
     @api.marshal_with(item_id)
     def get(self, price):
@@ -175,7 +175,7 @@ class ItemPriceRoute(Resource):
 
 
 # returns items that cost less than max
-@ns.route("/items/price/max/<int:max>")
+@ns.route("/items/price/max/<float:max>")
 class ItemMaxPriceRoute(Resource):
     @api.marshal_with(item_id)
     def get(self, max):
@@ -183,7 +183,7 @@ class ItemMaxPriceRoute(Resource):
 
 
 # returns items that cost more than min
-@ns.route("/items/price/min/<int:min>")
+@ns.route("/items/price/min/<float:min>")
 class ItemMinPriceRoute(Resource):
     @api.marshal_with(item_id)
     def get(self, min):
@@ -191,7 +191,7 @@ class ItemMinPriceRoute(Resource):
 
 
 # returns item within the price range
-@ns.route("/items/price/range/<int:max>/<int:min>")
+@ns.route("/items/price/range/<float:max>/<float:min>")
 class ItemMinPriceRoute(Resource):
     @api.marshal_with(item_id)
     def get(self, max, min):
